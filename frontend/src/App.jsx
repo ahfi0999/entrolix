@@ -39,11 +39,16 @@ function App() {
   const submit = async (event) => {
     event.preventDefault()
     const form = event.currentTarget
+    const endpoint = import.meta.env.VITE_FORM_ENDPOINT
+    if (!endpoint) {
+      setFormStatus('Contact form setup is pending. Add VITE_FORM_ENDPOINT to enable submissions.')
+      return
+    }
     setFormStatus('sending')
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/inquiries/`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      const response = await fetch(endpoint, {
+        method: 'POST', headers: { Accept: 'application/json' },
+        body: new FormData(form),
       })
       if (!response.ok) {
         const data = await response.json().catch(() => ({}))
