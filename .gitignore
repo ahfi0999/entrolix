@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+.DS_Store
+postgres-setup.log
