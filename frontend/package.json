@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
+    "verify:pages": "node scripts/verify-pages.mjs",
+    "verify:motion": "node scripts/verify-motion.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
