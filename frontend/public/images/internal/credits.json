@@ -1,0 +1,14 @@
+{
+  "license": "https://unsplash.com/license",
+  "retrieved": "2026-10-20",
+  "usage": "Illustrative stock photographs, not Entrolix employees, clients, premises, products or results. Local 600x450 and 1200x900 WebP renditions, cropped by the source image CDN at quality 80.",
+  "photos": {
+    "workshop": { "author": "Campaign Creators", "source": "https://unsplash.com/photos/gMsnXqILjp4", "image": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0", "alt": "A presenter leading a discussion with participants using laptops around a table" },
+    "development": { "author": "Compagnons / Sigmund", "source": "https://unsplash.com/photos/Im_cQ6hQo10", "image": "https://images.unsplash.com/photo-1629904853893-c2c8981a1dc5", "alt": "Two developers working with code on monitors in a bright office" },
+    "interview": { "author": "Vitaly Gariev", "source": "https://unsplash.com/photos/bhQJOeJWEfE", "image": "https://images.unsplash.com/photo-1758518731694-41ea7fa6a2d9", "alt": "A professional holding a clipboard during an office interview" },
+    "planning": { "author": "Paymo", "source": "https://unsplash.com/photos/4wSnhAT8d9g", "image": "https://images.unsplash.com/photo-1677506048892-edde55cf3277", "alt": "A presenter reviewing a process on a whiteboard covered with sticky notes" },
+    "analytics": { "author": "1981 Digital", "source": "https://unsplash.com/photos/bf9sZBcGQl4", "image": "https://images.unsplash.com/photo-1686061593213-98dad7c599b9", "alt": "A computer display showing analytical charts and a data dashboard" },
+    "team": { "author": "Annie Spratt", "source": "https://unsplash.com/photos/QckxruozjRg", "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c", "alt": "Colleagues collaborating around a shared desk with laptops" },
+    "conversation": { "author": "Christina at wocintechchat.com", "source": "https://unsplash.com/photos/faEfWCdOKIg", "image": "https://images.unsplash.com/photo-1573164574572-cb89e39749b4", "alt": "Professionals discussing their work around a table with laptops" }
+  }
+}

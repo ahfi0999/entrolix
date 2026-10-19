@@ -1,16 +1,17 @@
-import { ArrowRight, Bot, Check, Sparkles } from 'lucide-react'
+import { ArrowRight, Check } from 'lucide-react'
 import { beliefs, company } from './company'
 import { Breadcrumbs } from './components/SiteLayout'
 import { serviceGroups } from './catalog'
+import { PagePhoto } from './components/PageMedia'
 
 export default function AboutPage() {
-  return <main id="main-content" className="about-page">
+  return <main id="main-content" className="internal-page about-page">
     <section className="page-hero about-hero container">
       <Breadcrumbs items={[{ label: 'About' }]} />
-      <div className="eyebrow"><Sparkles size={15} aria-hidden="true" /> ABOUT ENTROLIX</div>
+      <div className="eyebrow">ABOUT ENTROLIX</div>
       <h1>We’re building<br />what’s <em>next.</em></h1>
       <div className="about-hero-bottom"><p>{company.introduction}</p><a className="button button-dark" href="/services">Explore our services <ArrowRight size={17} aria-hidden="true" /></a></div>
-      <div className="about-manifesto"><div className="manifesto-orbit" aria-hidden="true"><span className="manifesto-icon"><Bot size={46} /></span><i className="manifesto-dot dot-one" /><i className="manifesto-dot dot-two" /><span className="orbit-word word-one">BUILD</span><span className="orbit-word word-two">AUTOMATE</span><span className="orbit-word word-three">INNOVATE</span></div><div><span className="label">EMPOWERING POSSIBILITIES</span><h2>Better technology.<br /><em>Better possibilities.</em></h2><p>{company.belief}</p></div></div>
+      <div className="about-manifesto"><PagePhoto name="conversation" caption="Progress brings different perspectives together." priority /><div><span className="label">EMPOWERING POSSIBILITIES</span><h2>Better technology.<br /><em>Better possibilities.</em></h2><p>{company.belief}</p></div></div>
     </section>
 
     <section className="container about-pillars" aria-label="Our three core services">{serviceGroups.map(({ id, title, description, icon: Icon, accent }) => <a className={`about-pillar accent-${accent}`} href={`/${id}`} key={id}><Icon size={26} aria-hidden="true" /><h2>{title}</h2><p>{description}</p><span className="text-link">Explore {title.toLowerCase()}<ArrowRight size={17} aria-hidden="true" /></span></a>)}</section>

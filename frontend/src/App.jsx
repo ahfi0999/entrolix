@@ -4,7 +4,7 @@ import AboutPage from './AboutPage'
 import HomePage from './pages/HomePage'
 import ContactPage from './pages/ContactPage'
 import { CategoryPage, OfferingPage, ServicesOverview } from './pages/ServicePages'
-import { Footer, Header } from './components/SiteLayout'
+import { Footer, Header, StaticNavigation } from './components/SiteLayout'
 import { resolveRoute } from './routes'
 import { MotionProvider } from './components/MotionProvider'
 
@@ -43,5 +43,5 @@ export default function App({ initialPath }) {
     case 'contact': page = <ContactPage />; break
     default: page = <main id="main-content" className="container not-found"><span className="eyebrow">404 / PAGE NOT FOUND</span><h1>Let’s get you<br /><em>back on track.</em></h1><p>The page you’re looking for isn’t here. Explore our training, consulting, and recruitment services.</p><a className="button button-dark" href="/services">Explore services<ArrowRight size={18} aria-hidden="true" /></a></main>
   }
-  return <MotionProvider pageKey={route.pathname}><a className="skip-link" href="#main-content">Skip to content</a><Header pathname={route.pathname} />{page}<Footer /></MotionProvider>
+  return <MotionProvider pageKey={route.pathname}><a className="skip-link" href="#main-content">Skip to content</a><Header pathname={route.pathname} /><StaticNavigation />{page}<Footer /></MotionProvider>
 }

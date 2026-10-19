@@ -1,0 +1,12 @@
+Entrolix dark wordmark v2
+Mode: built-in image generation, editing the user-supplied circular-e logo.
+The original assets are retained. No CLI or new dependency was used.
+
+Final prompt:
+Edit ONLY the ORIGINAL user-supplied entrolix logo: black lowercase entrolix on a WHITE rectangular background, with the distinctive circular e icon. Ignore the EX/EntroliX logo and ignore both subsequent faulty white cutout exports. Simply invert the original colors: perfectly solid PURE BLACK #000000 background, perfectly solid PURE WHITE #ffffff original black ink. The original white lowercase e inside its black circle becomes a BLACK lowercase e inside a WHITE circle; the round counter inside the e becomes WHITE. Letter counters and spaces become BLACK. Preserve original logo exact geometry, proportions, lowercase letters ntrolix and spacing. Absolutely no new typography, no textures, no shadows, no distressed edges, no halo or glow. Clean flat two-color high-resolution logo. Frame closely around the full horizontal logo: logo almost fills width, small 2% margin only, wide landscape ratio. Output OPAQUE pure black background, not transparency.
+
+Integration: white-on-black raster; scoped CSS screen blending removes black
+against the existing dark header/footer. No contrast filter is applied, so
+antialiased edge pixels are preserved. Object-fit contain shows the complete
+image in a box matching its approximately 2.5:1 canvas aspect ratio.
+Earlier transparent exports had artifacts and were not used in the project.

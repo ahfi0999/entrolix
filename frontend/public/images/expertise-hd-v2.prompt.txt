@@ -1,0 +1,28 @@
+ENTROLIX EXPERTISE — HD IMAGE EDITS
+Created: 2026-10-20
+Method: built-in image_gen, one edit per user-supplied image.
+Scope: homepage second section (Our Expertise / What We Do) only.
+These are generative enhancements, not pixel-identical lossless upscales.
+Requested 2048 x 1536; actual tool output is 1448 x 1086 for each image.
+The recruitment portrait was expanded to landscape to preserve its central motif.
+No dependency, navbar, hero, layout, link or service-copy changes.
+PNG masters: frontend/output/imagegen/expertise-{training,it,recruitment}-hd-v2.png
+Web assets: public/images/expertise-{training,it,recruitment}-hd-v2.jpg (1448 x 1086)
+Mobile assets: public/images/expertise-{training,it,recruitment}-hd-v2-640.jpg (640 x 480)
+Web derivatives are JPEG quality 90, preserving the enhanced originals above.
+Original website images are retained.
+
+TRAINING
+Use case: precise-object-edit. Asset type: HD website Training Services card.
+Input images: the first user-attached image (hand holding a cyan education/graduation-cap hologram above a navy cityscape) is the ONLY edit target; the IT and recruitment images are not to be combined with it.
+Primary request: faithfully enhance this supplied training image into a clean high-resolution 2048 x 1536 landscape asset. Preserve the original hand, graduation cap, concentric cyan interface and surrounding learning icons, navy city at night, lighting and atmosphere. Expand the canvas vertically as needed to fit 4:3 without cutting off the hand or circular interface. Preserve original subject arrangement, with the hologram on the right and city on the left; all important elements must fit inside the frame. Improve edge clarity, recover subtle detail and remove compression noise, while retaining soft depth-of-field in the city. Avoid over-sharpened halos, new objects, additional text, logos, borders or a collage. Output ONE image only.
+
+IT
+Use case: precise-object-edit. Asset type: HD website IT Solutions card.
+Input images: the second user-attached image (white letters IT inside a cyan circular technology interface on navy background) is the ONLY edit target; training and recruitment images are not to be combined with it.
+Primary request: faithfully enhance this supplied IT image into a clean high-resolution 2048 x 1536 landscape asset. Preserve the central tilted circular IT badge, the surrounding connected technology icons, precise thin cyan lines, deep navy colors and atmospheric lighting. Expand the canvas vertically as needed for 4:3 without cropping away any icons. Keep all important elements within the image frame. Improve clarity and reduce compression artifacts, do not redesign the diagram or rearrange its icons. Text verbatim: "IT", large white italic uppercase in the center, no other text. No new logos, objects, borders or collage. Output ONE image only.
+
+RECRUITMENT
+Use case: precise-object-edit. Asset type: HD website Recruitment card.
+Input images: the third user-attached image (portrait office scene with glowing cyan connected-person holograms over a tabletop) is the ONLY edit target; training and IT images are not to be combined with it.
+Primary request: faithfully enhance and expand this supplied recruitment image into a clean high-resolution 2048 x 1536 landscape asset. Preserve the central cyan person icon, its connected smaller profile circles, the luminous projected circular base on the tabletop, warm ceiling lights and blurred office colleagues. Outpaint matching office space to the left and right to adapt the portrait to 4:3 landscape, keeping the full central network and projection base visible, not cutting off the original subject. Improve clarity in holographic lines and foreground, reduce compression artifacts; retain intentional photographic background blur, existing color balance and lighting. No additional people, new interface icons, text, logos, borders or collage. Output ONE image only.

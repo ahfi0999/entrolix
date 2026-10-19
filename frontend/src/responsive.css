@@ -1,0 +1,44 @@
+/* Final shared layout safeguards, after the base, service and homepage styles. */
+:is(.contact-page-grid, .form-row, .detail-layout, .home-about, .faq-layout,
+    .section-heading.split, .company-story, .direction-grid, .company-why) > * {
+  min-width: 0;
+}
+.breadcrumbs li { min-width: 0; }
+.breadcrumbs li > span { overflow-wrap: anywhere; }
+:is(.service-hero, .offering-card, .pillar-card, .enquiry-card) :is(h1, h2, h3) {
+  overflow-wrap: anywhere;
+}
+.contact-email, .footer-email { max-width: 100%; overflow-wrap: anywhere; }
+.button { max-width: 100%; text-align: center; }
+form :is(input, select, textarea) { font-size: 16px; }
+.form-feedback a:not(.button), .no-script-notice a { text-decoration: underline; text-underline-offset: 3px; }
+.no-script-notice { padding-block: 20px; }
+.no-script-notice nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.no-script-notice a { display: inline-flex; align-items: center; min-height: 44px; }
+.no-script-notice p { margin-bottom: 12px; }
+@media (max-width: 900px) {
+  .home-page .home-hero-band .home-hero { grid-template-columns: 1fr; gap: 36px; }
+  .home-page .home-hero-copy > p { max-width: 620px; }
+  .home-hero-visual { width: 100%; max-width: 640px; margin-inline: auto; }
+  .hero-team-photo { aspect-ratio: 3 / 2; }
+}
+@media (max-width: 767px) {
+  .footer-column { font-size: 13px; gap: 4px; }
+  .footer-column a, .footer-bottom a, .footer-email { min-height: 44px; display: flex; align-items: center; }
+  .footer-bottom nav { gap: 10px 24px; }
+  .text-link { min-height: 44px; }
+  .hero-team-photo { aspect-ratio: 4 / 3; }
+  .hero-path-copy > span { font-size: 10px; }
+  .home-hero-visual figcaption { font-size: 10px; letter-spacing: .8px; }
+}
+@media (max-width: 380px) {
+  .home-page .home-hero h1 { font-size: 36px; letter-spacing: -1.5px; }
+  .home-page .hero-actions { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .hero-photo-message { left: 16px; bottom: 16px; right: 16px; gap: 10px; }
+  .hero-photo-message strong { font-size: 17px; }
+  .hero-message-icon { width: 40px; height: 40px; }
+  .home-hero-visual figcaption { flex-wrap: wrap; gap: 4px 16px; }
+  .manifesto-orbit { width: min(100%, 220px); }
+  .word-two { right: 0; }
+  .word-three { left: 0; }
+}

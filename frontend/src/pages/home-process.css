@@ -1,0 +1,76 @@
+/* Homepage process only. Shared Steps and all preceding sections are untouched. */
+.entrolix-process {
+  --process-background: #050e17;
+  --process-heading: #f4f3ef;
+  --process-body: #b4bdc9;
+  --process-accent: #afc2ef;
+  --process-gap: clamp(28px, 3.2vw, 54px);
+  color: var(--process-heading);
+  background: var(--process-background);
+  font-family: 'DM Sans', sans-serif;
+  padding-block: 0 clamp(80px, 7vw, 120px);
+  scroll-margin-top: 24px;
+}
+.entrolix-process .entrolix-process__inner { width: min(1600px, 88.8%); margin-inline: auto; border-top: 1px solid #b2c6df26; padding-top: clamp(64px, 5.7vw, 96px); }
+.entrolix-process .entrolix-process__intro { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); align-items: end; gap: 64px; margin-bottom: clamp(48px, 4.5vw, 76px); }
+.entrolix-process .entrolix-process__eyebrow { display: flex; align-items: center; gap: 14px; margin: 0 0 24px; color: var(--process-accent); font-size: 11px; font-weight: 500; line-height: 1.5; letter-spacing: .23em; }
+.entrolix-process .entrolix-process__eyebrow::before { content: ''; width: 28px; height: 1px; background: #829dde; }
+.entrolix-process .entrolix-process__title { margin: 0; color: var(--process-heading); font-family: Georgia, 'Times New Roman', serif; font-size: clamp(38px, 3.55vw, 60px); font-weight: 400; line-height: 1.1; letter-spacing: -.035em; }
+.entrolix-process .entrolix-process__context { min-width: 0; justify-self: end; max-width: 430px; }
+.entrolix-process .entrolix-process__summary { margin: 0; color: var(--process-body); font-size: clamp(15px, 1.1vw, 18px); line-height: 1.8; }
+.entrolix-process .entrolix-process__scope { margin: 15px 0 0; color: #a3afc1; font-size: 12px; line-height: 1.7; }
+.entrolix-process .entrolix-process__journey { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--process-gap); margin: 0; padding: 0; list-style: none; }
+.entrolix-process .entrolix-process__step { position: relative; min-width: 0; }
+.entrolix-process .entrolix-process__step::before { content: ''; position: absolute; left: 44px; right: calc(0px - var(--process-gap)); top: 11px; height: 1px; background: #b2c6df33; pointer-events: none; }
+.entrolix-process .entrolix-process__step:last-child::before { display: none; }
+.entrolix-process .entrolix-process__number { position: relative; display: block; width: fit-content; color: #a4a9d5; font-size: 13px; font-weight: 500; line-height: 22px; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.entrolix-process .entrolix-process__step:first-child .entrolix-process__number { color: #8ebdff; }
+.entrolix-process .entrolix-process__step-copy { min-width: 0; margin-top: 28px; }
+.entrolix-process .entrolix-process__step-copy h3 { margin: 0 0 14px; color: var(--process-heading); font-family: 'Manrope', sans-serif; font-size: clamp(22px, 1.55vw, 26px); font-weight: 500; line-height: 1.35; letter-spacing: -.035em; }
+.entrolix-process .entrolix-process__step-copy p { max-width: 330px; margin: 0; color: var(--process-body); font-size: 15px; line-height: 1.8; }
+.entrolix-process .entrolix-process__invitation { display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-top: clamp(48px, 4.7vw, 80px); padding-top: 34px; border-top: 1px solid #b2c6df26; }
+.entrolix-process .entrolix-process__invitation > div { min-width: 0; }
+.entrolix-process .entrolix-process__invitation h3 { margin: 0 0 7px; color: var(--process-heading); font-family: 'Manrope', sans-serif; font-size: clamp(21px, 1.55vw, 26px); font-weight: 500; line-height: 1.35; letter-spacing: -.035em; }
+.entrolix-process .entrolix-process__invitation p { margin: 0; color: var(--process-body); font-size: 15px; line-height: 1.7; }
+.entrolix-process .entrolix-process__contact { display: inline-flex; flex-shrink: 0; justify-content: center; align-items: center; gap: 24px; min-height: 52px; max-width: 100%; padding: 13px 23px; border: 1px solid #809acb8c; border-radius: 5px; color: #dce7ff; font-size: 14px; font-weight: 500; line-height: 1.5; text-decoration: none; }
+.entrolix-process .entrolix-process__contact > svg { flex-shrink: 0; color: #a9baff; }
+.entrolix-process .entrolix-process__contact:focus-visible { outline: 2px solid #a6ccff; outline-offset: 5px; color: #fff; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .entrolix-process .entrolix-process__contact { transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease; }
+  .entrolix-process .entrolix-process__contact > svg { transition: transform 220ms ease; }
+  .entrolix-process .entrolix-process__contact:hover { color: #fff; border-color: #b8caff; background: #152238; }
+  .entrolix-process .entrolix-process__contact:hover > svg { transform: translateX(4px); }
+}
+@media (max-width: 1040px) {
+  .entrolix-process .entrolix-process__inner { width: calc(100% - 48px); padding-top: 64px; }
+  .entrolix-process .entrolix-process__intro { gap: 36px; }
+  .entrolix-process .entrolix-process__title { font-size: clamp(35px, 4.2vw, 44px); }
+  .entrolix-process .entrolix-process__journey { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 42px; }
+  .entrolix-process .entrolix-process__step:nth-child(2n)::before { display: none; }
+  .entrolix-process .entrolix-process__step-copy { margin-top: 22px; }
+  .entrolix-process .entrolix-process__step-copy h3 { font-size: 24px; }
+  .entrolix-process .entrolix-process__step-copy p { max-width: 410px; }
+}
+@media (max-width: 760px) {
+  .entrolix-process .entrolix-process__intro { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .entrolix-process .entrolix-process__context { justify-self: start; max-width: 540px; }
+  .entrolix-process .entrolix-process__invitation { align-items: flex-start; flex-direction: column; gap: 24px; }
+}
+@media (max-width: 600px) {
+  .entrolix-process { padding-bottom: 72px; }
+  .entrolix-process .entrolix-process__inner { width: calc(100% - 40px); padding-top: 48px; }
+  .entrolix-process .entrolix-process__intro { margin-bottom: 38px; }
+  .entrolix-process .entrolix-process__eyebrow { font-size: 10px; margin-bottom: 20px; }
+  .entrolix-process .entrolix-process__title { font-size: clamp(30px, 7.6vw, 44px); line-height: 1.14; }
+  .entrolix-process .entrolix-process__journey { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .entrolix-process .entrolix-process__step { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 20px; }
+  .entrolix-process .entrolix-process__step:not(:last-child)::before { display: block; left: 9px; right: auto; top: 34px; bottom: -20px; height: auto; width: 1px; }
+  .entrolix-process .entrolix-process__number { padding-top: 3px; }
+  .entrolix-process .entrolix-process__step-copy { margin-top: 0; }
+  .entrolix-process .entrolix-process__step-copy h3 { font-size: 23px; margin-bottom: 10px; }
+  .entrolix-process .entrolix-process__step-copy p { max-width: none; line-height: 1.75; }
+  .entrolix-process .entrolix-process__invitation { margin-top: 40px; padding-top: 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrolix-process .entrolix-process__contact, .entrolix-process .entrolix-process__contact > svg { transition: none; transform: none; }
+}

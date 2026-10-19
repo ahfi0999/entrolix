@@ -7,7 +7,7 @@ import { createServer } from 'vite'
 
 const root = fileURLToPath(new URL('../', import.meta.url))
 const output = path.join(root, 'dist')
-const server = await createServer({ root, mode: 'production', appType: 'custom', server: { middlewareMode: true, watch: null, ws: false }, optimizeDeps: { noDiscovery: true, include: [] } })
+const server = await createServer({ root, configLoader: 'runner', mode: 'production', appType: 'custom', server: { middlewareMode: true, watch: null, ws: false }, optimizeDeps: { noDiscovery: true, include: [] } })
 const escape = value => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 try {
   const { default: App } = await server.ssrLoadModule('/src/App.jsx')
@@ -28,7 +28,7 @@ try {
     await fs.mkdir(path.dirname(target), { recursive: true })
     await fs.writeFile(target, html)
   }
-  console.log(`Prerendered ${pagePaths.length} pages plus a 404 page with unique titles and descriptions.`)
+  console.log(`Prerendered ${pagePaths.length} pages plus a 404 page with the Entrolix title and page-specific descriptions.`)
 } finally {
   await server.close()
 }

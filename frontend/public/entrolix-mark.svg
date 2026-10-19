@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38" fill="none">
+  <defs><linearGradient id="brand" x1="1" y1="8" x2="37" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#329bff"/><stop offset=".55" stop-color="#456eff"/><stop offset="1" stop-color="#aa65ff"/></linearGradient></defs>
+  <path d="M11 3H32a4 4 0 0 1 0 8H7a4 4 0 0 1 0-8h4ZM5 15h23a4 4 0 0 1 0 8H5a4 4 0 0 1 0-8Zm4 12h23a4 4 0 0 1 0 8H9a4 4 0 0 1 0-8Z" fill="url(#brand)"/>
+</svg>

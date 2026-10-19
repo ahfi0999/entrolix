@@ -17,6 +17,7 @@ function NavigationIcon({ icon: Icon }) {
 }
 
 export function Header({ pathname }) {
+  const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState(null)
   const [customAppsOpen, setCustomAppsOpen] = useState(false)
@@ -31,6 +32,13 @@ export function Header({ pathname }) {
   const selectDropdown = id => { setActiveDropdown(id); setCustomAppsOpen(false); pendingFocus.current = null }
   const closeAll = () => { setOpen(false); selectDropdown(null) }
   const closeDropdown = id => { if (activeDropdown === id) selectDropdown(null) }
+
+  useEffect(() => {
+    const update = () => setScrolled(window.scrollY > 24)
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    return () => window.removeEventListener('scroll', update)
+  }, [])
 
   useEffect(() => {
     const close = event => {
@@ -72,7 +80,7 @@ export function Header({ pathname }) {
   }, [activeDropdown, customAppsOpen])
 
   useEffect(() => {
-    const desktop = window.matchMedia?.('(min-width: 768px)')
+    const desktop = window.matchMedia?.('(min-width: 1024px)')
     const reset = () => { setOpen(false); setActiveDropdown(null); setCustomAppsOpen(false); pendingFocus.current = null }
     desktop?.addEventListener?.('change', reset)
     return () => desktop?.removeEventListener?.('change', reset)
@@ -131,11 +139,10 @@ export function Header({ pathname }) {
     links[next].focus()
   }
 
-  return <header className="site-header" ref={header}>
+  return <header className={`site-header reference-header${pathname === '/' ? ' reference-header--home' : ''}`} ref={header} data-header-scrolled={scrolled}>
     <nav className="container main-nav" aria-label="Main navigation">
       <a className="brand header-brand" href="/" aria-label="Entrolix home" onClick={closeAll}>
-        <span className="header-wordmark" aria-hidden="true"><img src="/entrolix-logo.png" alt="" width="768" height="512" fetchPriority="high" /></span>
-        <span className="header-tagline" aria-hidden="true">Empowering possibilities</span>
+        <img className="reference-brand-wordmark" src="/entrolix-wordmark-dark-v2.png" alt="" width="180" height="50" />
       </a>
       <div id="primary-navigation" className={`nav-links ${open ? 'open' : ''}`}>
         <div className="primary-links">
@@ -146,7 +153,7 @@ export function Header({ pathname }) {
             return <div
               key={id} className="services-disclosure"
               onPointerEnter={event => {
-                if (event.pointerType !== 'mouse' || !window.matchMedia?.('(min-width: 768px) and (hover: hover)').matches) return
+                if (event.pointerType !== 'mouse' || !window.matchMedia?.('(min-width: 1024px) and (hover: hover)').matches) return
                 // Keep a keyboard-focused link visible when the pointer crosses another menu.
                 if (activeDropdown && activeDropdown !== id && dropdowns.current[activeDropdown]?.contains(document.activeElement)) return
                 if (activeDropdown !== id) selectDropdown(id)
@@ -181,7 +188,7 @@ export function Header({ pathname }) {
                   {id === 'consulting' ? <div
                     className="custom-applications"
                     onPointerEnter={event => {
-                      if (event.pointerType === 'mouse' && window.matchMedia?.('(min-width: 768px) and (hover: hover)').matches) setCustomAppsOpen(true)
+                      if (event.pointerType === 'mouse' && window.matchMedia?.('(min-width: 1024px) and (hover: hover)').matches) setCustomAppsOpen(true)
                     }}
                     onPointerLeave={event => {
                       if (event.pointerType === 'mouse' && !event.currentTarget.contains(document.activeElement)) setCustomAppsOpen(false)
@@ -217,16 +224,23 @@ export function Header({ pathname }) {
               </div>
             </div>
           })}
+          <a href="/about" aria-current={pathname === '/about' ? 'page' : undefined} onClick={closeAll}>About</a>
+          <a href="/contact" aria-current={pathname === '/contact' ? 'page' : undefined} onClick={closeAll}>Contact</a>
         </div>
+        <a className="reference-nav-cta" href="/contact" onClick={closeAll}>Get in Touch<ArrowRight size={18} aria-hidden="true" /></a>
       </div>
       <div className="header-controls"><button ref={toggle} type="button" className="menu-button" onClick={() => { setOpen(value => !value); selectDropdown(null) }} aria-expanded={open} aria-controls="primary-navigation" aria-label={open ? 'Close navigation' : 'Open navigation'}>{open ? <X /> : <Menu />}</button></div>
     </nav>
   </header>
 }
 
+export function StaticNavigation() {
+  return <noscript><div className="container no-script-notice"><nav aria-label="Navigation without JavaScript"><a href="/">Home</a>{serviceGroups.map(group => <a key={group.id} href={`/${group.id}`}>{navigationLabels[group.id]}</a>)}<a href="/contact">Contact</a></nav></div></noscript>
+}
+
 export function Footer() {
   return <footer className="site-footer"><div className="container"><div className="footer-top">
-    <div className="footer-brand"><a className="brand" href="/" aria-label="Entrolix home"><img src="/entrolix-logo.png" alt="Entrolix" width="150" height="76" /></a><p>Skills, technology, and people.<br />Built for what comes next.</p><a className="footer-email" href={`mailto:${contactEmail}`}><Mail size={16} aria-hidden="true" />{contactEmail}</a></div>
+    <div className="footer-brand"><a className="brand footer-wordmark" href="/" aria-label="Entrolix home"><img src="/entrolix-wordmark-dark-v2.png" alt="" width="180" height="50" /></a><p>Skills, technology, and people.<br />Built for what comes next.</p><a className="footer-email" href={`mailto:${contactEmail}`}><Mail size={16} aria-hidden="true" />{contactEmail}</a></div>
     {serviceGroups.map(group => <nav className="footer-column" key={group.id} aria-label={`${group.title} links`}><a className="footer-heading" href={`/${group.id}`}>{group.title}</a>{getOfferings(group.id).map(item => <a href={offeringPath(item)} key={item.slug}>{item.acronym ? `${item.acronym} Development` : item.shortTitle}</a>)}</nav>)}
     </div><div className="footer-bottom"><p>© {new Date().getFullYear()} Entrolix. Empowering possibilities.</p><nav aria-label="Company links"><a href="/services">All services</a><a href="/about">About us</a><a href="/contact">Contact</a></nav></div></div></footer>
 }

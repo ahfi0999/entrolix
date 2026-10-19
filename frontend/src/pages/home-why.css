@@ -1,0 +1,67 @@
+/* Why Entrolix only: no navbar, hero, expertise or shared-style overrides. */
+.entrolix-why {
+  --why-background: #050e17;
+  --why-heading: #f4f3ef;
+  --why-body: #b4bdc9;
+  --why-accent: #afc2ef;
+  background: var(--why-background);
+  color: var(--why-heading);
+  font-family: 'DM Sans', sans-serif;
+  padding-block: 0 clamp(80px, 7vw, 120px);
+  scroll-margin-top: 24px;
+}
+.entrolix-why .entrolix-why__inner { width: min(1600px, 88.8%); margin-inline: auto; border-top: 1px solid #b2c6df26; padding-top: clamp(64px, 5.7vw, 96px); }
+.entrolix-why .entrolix-why__layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; gap: clamp(56px, 8vw, 136px); }
+.entrolix-why .entrolix-why__statement { min-width: 0; }
+.entrolix-why .entrolix-why__eyebrow { display: flex; align-items: center; gap: 14px; margin: 0 0 26px; color: var(--why-accent); font-size: 11px; font-weight: 500; line-height: 1.5; letter-spacing: .23em; }
+.entrolix-why .entrolix-why__eyebrow::before { content: ''; width: 28px; height: 1px; background: #829dde; }
+.entrolix-why .entrolix-why__title { margin: 0; color: var(--why-heading); font-family: Georgia, 'Times New Roman', serif; font-size: clamp(38px, 3.55vw, 60px); font-weight: 400; line-height: 1.13; letter-spacing: -.035em; }
+.entrolix-why .entrolix-why__title > span { display: block; }
+.entrolix-why .entrolix-why__accent { color: var(--why-accent); }
+.entrolix-why .entrolix-why__summary { max-width: 490px; margin: 28px 0 0; color: var(--why-body); font-size: clamp(15px, 1.1vw, 18px); line-height: 1.85; }
+.entrolix-why .entrolix-why__link { display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; min-height: 48px; max-width: 100%; margin-top: 28px; padding-block: 10px; border-bottom: 1px solid #849dcf70; color: #dce7ff; font-size: 14px; font-weight: 500; line-height: 1.5; text-decoration: none; }
+.entrolix-why .entrolix-why__link > svg { flex-shrink: 0; color: #a9baff; }
+.entrolix-why .entrolix-why__link:focus-visible { outline: 2px solid #a6ccff; outline-offset: 6px; border-radius: 2px; color: #fff; }
+.entrolix-why .entrolix-why__principles { min-width: 0; margin: 43px 0 0; padding: 0; list-style: none; }
+.entrolix-why .entrolix-why__principle { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 24px; margin: 0; padding: 30px 0; }
+.entrolix-why .entrolix-why__principle:first-child { padding-top: 0; }
+.entrolix-why .entrolix-why__principle:last-child { padding-bottom: 0; }
+.entrolix-why .entrolix-why__principle + .entrolix-why__principle { border-top: 1px solid #b2c6df26; }
+.entrolix-why .entrolix-why__number { display: block; padding-top: 4px; color: #a4a9d5; font-size: 12px; font-weight: 500; line-height: 1.8; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.entrolix-why .entrolix-why__principle-copy { min-width: 0; }
+.entrolix-why .entrolix-why__principle-copy h3 { margin: 0 0 12px; color: var(--why-heading); font-family: 'Manrope', sans-serif; font-size: clamp(21px, 1.55vw, 26px); font-weight: 500; line-height: 1.35; letter-spacing: -.035em; }
+.entrolix-why .entrolix-why__principle-copy p { max-width: 470px; margin: 0; color: var(--why-body); font-size: 15px; line-height: 1.8; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .entrolix-why .entrolix-why__link { transition: color 180ms ease, border-color 180ms ease; }
+  .entrolix-why .entrolix-why__link > svg { transition: transform 220ms ease; }
+  .entrolix-why .entrolix-why__link:hover { color: #fff; border-color: #b8caff; }
+  .entrolix-why .entrolix-why__link:hover > svg { transform: translateX(4px); }
+}
+@media (max-width: 1040px) {
+  .entrolix-why .entrolix-why__inner { width: calc(100% - 48px); padding-top: 64px; }
+  .entrolix-why .entrolix-why__layout { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 40px; }
+  .entrolix-why .entrolix-why__title { font-size: clamp(32px, 3.8vw, 40px); }
+  .entrolix-why .entrolix-why__summary { font-size: 15px; }
+  .entrolix-why .entrolix-why__principle { gap: 16px; padding-block: 25px; grid-template-columns: 24px minmax(0, 1fr); }
+  .entrolix-why .entrolix-why__principle-copy h3 { font-size: 21px; }
+}
+@media (max-width: 800px) {
+  .entrolix-why .entrolix-why__layout { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .entrolix-why .entrolix-why__title { font-size: clamp(34px, 5.8vw, 46px); }
+  .entrolix-why .entrolix-why__summary { max-width: 540px; }
+  .entrolix-why .entrolix-why__principles { margin-top: 0; }
+  .entrolix-why .entrolix-why__principle-copy p { max-width: 580px; }
+}
+@media (max-width: 600px) {
+  .entrolix-why { padding-bottom: 72px; }
+  .entrolix-why .entrolix-why__inner { width: calc(100% - 40px); padding-top: 48px; }
+  .entrolix-why .entrolix-why__eyebrow { font-size: 10px; margin-bottom: 22px; }
+  .entrolix-why .entrolix-why__title { font-size: clamp(27px, 7.4vw, 42px); line-height: 1.18; }
+  .entrolix-why .entrolix-why__summary { margin-top: 23px; font-size: 15px; line-height: 1.8; }
+  .entrolix-why .entrolix-why__link { margin-top: 22px; }
+  .entrolix-why .entrolix-why__principle-copy h3 { font-size: 22px; margin-bottom: 10px; }
+  .entrolix-why .entrolix-why__principle-copy p { line-height: 1.75; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrolix-why .entrolix-why__link, .entrolix-why .entrolix-why__link > svg { transition: none; transform: none; }
+}

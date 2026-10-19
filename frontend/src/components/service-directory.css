@@ -1,0 +1,35 @@
+/* A compact directory within Our Expertise; no shared or navbar selectors. */
+.entrolix-directory {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--expertise-gap, 64px);
+  margin-top: clamp(56px, 5vw, 84px);
+  padding-top: 44px;
+  border-top: 1px solid #b2c6df26;
+  color: var(--expertise-body, #b4bdc9);
+  font-family: 'DM Sans', sans-serif;
+  scroll-margin-top: 24px;
+}
+.entrolix-directory .entrolix-directory__group { min-width: 0; }
+.entrolix-directory .entrolix-directory__heading { margin: 0 0 18px; color: var(--expertise-heading, #f4f3ef); font-family: 'Manrope', sans-serif; font-size: clamp(22px, 1.65vw, 27px); font-weight: 500; line-height: 1.35; letter-spacing: -.035em; }
+.entrolix-directory .entrolix-directory__links { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.entrolix-directory .entrolix-directory__links > li { min-width: 0; margin: 0; padding: 0; }
+.entrolix-directory .entrolix-directory__links a { display: flex; align-items: center; width: fit-content; max-width: 100%; min-height: 46px; padding-block: 9px; color: inherit; font-size: 16px; font-weight: 400; line-height: 1.65; text-decoration: underline; text-decoration-color: transparent; text-decoration-thickness: 1px; text-underline-offset: 6px; overflow-wrap: anywhere; }
+.entrolix-directory .entrolix-directory__links a:hover { color: #b8d3ff; text-decoration-color: currentColor; }
+.entrolix-directory .entrolix-directory__links a:focus-visible { color: #fff; outline: 2px solid #a6ccff; outline-offset: 4px; border-radius: 2px; text-decoration-color: currentColor; }
+@media (prefers-reduced-motion: no-preference) {
+  .entrolix-directory .entrolix-directory__links a { transition: color 180ms ease, text-decoration-color 180ms ease; }
+}
+@media (max-width: 900px) {
+  .entrolix-directory { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 40px; }
+}
+@media (max-width: 600px) {
+  .entrolix-directory { grid-template-columns: minmax(0, 1fr); gap: 30px; margin-top: 44px; padding-top: 32px; }
+  .entrolix-directory .entrolix-directory__heading { font-size: 23px; margin-bottom: 12px; }
+  .entrolix-directory .entrolix-directory__group + .entrolix-directory__group { border-top: 1px solid #b2c6df26; padding-top: 28px; }
+  .entrolix-directory .entrolix-directory__links { gap: 2px; }
+  .entrolix-directory .entrolix-directory__links a { width: 100%; min-height: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrolix-directory .entrolix-directory__links a { transition: none; }
+}

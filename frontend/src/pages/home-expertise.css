@@ -1,0 +1,80 @@
+/* Homepage-only editorial section. No shared tokens, navbar or hero overrides. */
+.entrolix-expertise {
+  --expertise-background: #050e17;
+  --expertise-heading: #f4f3ef;
+  --expertise-body: #b4bdc9;
+  --expertise-accent: #a1bcf0;
+  --expertise-gap: clamp(48px, 4.7vw, 80px);
+  background: var(--expertise-background);
+  color: var(--expertise-heading);
+  font-family: 'DM Sans', sans-serif;
+  padding-block: 0 clamp(76px, 7vw, 120px);
+  scroll-margin-top: 24px;
+}
+.entrolix-expertise .entrolix-expertise__inner { width: min(1600px, 88.8%); margin-inline: auto; border-top: 1px solid #b2c6df26; padding-top: clamp(64px, 5.7vw, 96px); }
+.entrolix-expertise .entrolix-expertise__intro { display: grid; grid-template-columns: 1.1fr 1fr; align-items: end; gap: 64px; margin-bottom: clamp(42px, 4vw, 68px); }
+.entrolix-expertise .entrolix-expertise__eyebrow { display: flex; align-items: center; gap: 14px; margin: 0 0 22px; color: var(--expertise-accent); font-size: 11px; line-height: 1.5; font-weight: 500; letter-spacing: .23em; }
+.entrolix-expertise .entrolix-expertise__eyebrow::before { content: ''; width: 28px; height: 1px; background: #829dde; }
+.entrolix-expertise .entrolix-expertise__title { margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(38px, 3.55vw, 60px); font-weight: 400; line-height: 1.1; letter-spacing: -.035em; color: var(--expertise-heading); }
+.entrolix-expertise .entrolix-expertise__title > span { color: #aebbd0; }
+.entrolix-expertise .entrolix-expertise__summary { justify-self: end; max-width: 460px; margin: 0 0 3px; font-size: clamp(15px, 1.1vw, 18px); line-height: 1.8; color: var(--expertise-body); }
+.entrolix-expertise .entrolix-expertise__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--expertise-gap); }
+.entrolix-expertise .entrolix-expertise__service { position: relative; min-width: 0; display: grid; grid-template-rows: auto auto auto 1fr auto; }
+.entrolix-expertise .entrolix-expertise__service + .entrolix-expertise__service::before { content: ''; position: absolute; top: 0; bottom: 0; left: calc(var(--expertise-gap) / -2); width: 1px; background: #b2c6df26; }
+.entrolix-expertise .entrolix-expertise__label { display: flex; align-items: baseline; gap: 16px; margin: 0 0 19px; font-size: 10px; line-height: 1.5; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: #aab6c8; }
+.entrolix-expertise .entrolix-expertise__label > span { font-size: 12px; letter-spacing: .03em; color: #a4a9d5; }
+.entrolix-expertise .entrolix-expertise__image { position: relative; overflow: hidden; aspect-ratio: 4 / 3; margin-bottom: 28px; border-radius: 3px; background: #172331; }
+.entrolix-expertise .entrolix-expertise__image img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; opacity: .92; }
+.entrolix-expertise .entrolix-expertise__service--training .entrolix-expertise__image img { object-position: 46% center; }
+.entrolix-expertise .entrolix-expertise__service--consulting .entrolix-expertise__image img { object-position: 52% center; }
+.entrolix-expertise .entrolix-expertise__service-title { margin: 0 0 14px; font-family: 'Manrope', sans-serif; font-size: clamp(23px, 1.8vw, 30px); font-weight: 500; line-height: 1.3; letter-spacing: -.045em; color: var(--expertise-heading); }
+.entrolix-expertise .entrolix-expertise__description { max-width: 410px; margin: 0; font-size: 15px; line-height: 1.8; color: var(--expertise-body); }
+.entrolix-expertise .entrolix-expertise__link { display: inline-flex; align-items: center; justify-content: space-between; justify-self: start; gap: 24px; min-height: 48px; max-width: 100%; margin-top: 23px; padding-block: 10px; border-bottom: 1px solid #849dcf70; color: #dce7ff; font-size: 14px; font-weight: 500; line-height: 1.5; text-decoration: none; }
+.entrolix-expertise .entrolix-expertise__link > svg { flex-shrink: 0; color: #a9baff; }
+.entrolix-expertise .entrolix-expertise__link:focus-visible { outline: 2px solid #a6ccff; outline-offset: 6px; border-radius: 2px; color: #fff; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .entrolix-expertise .entrolix-expertise__image img { transition: transform 650ms cubic-bezier(.2, .7, .3, 1), opacity 400ms ease; }
+  .entrolix-expertise .entrolix-expertise__service:hover .entrolix-expertise__image img { transform: scale(1.035); opacity: 1; }
+  .entrolix-expertise .entrolix-expertise__link { transition: color 180ms ease, border-color 180ms ease; }
+  .entrolix-expertise .entrolix-expertise__link > svg { transition: transform 220ms ease; }
+  .entrolix-expertise .entrolix-expertise__link:hover { color: #fff; border-color: #b8caff; }
+  .entrolix-expertise .entrolix-expertise__link:hover > svg { transform: translateX(4px); }
+}
+@media (max-width: 1040px) {
+  .entrolix-expertise .entrolix-expertise__inner { width: calc(100% - 48px); padding-top: 64px; }
+  .entrolix-expertise .entrolix-expertise__intro { gap: 36px; }
+  .entrolix-expertise .entrolix-expertise__title { font-size: clamp(36px, 4.5vw, 46px); }
+  .entrolix-expertise .entrolix-expertise__summary { font-size: 15px; line-height: 1.75; }
+  .entrolix-expertise .entrolix-expertise__grid { grid-template-columns: 1fr; gap: 32px; }
+  .entrolix-expertise .entrolix-expertise__service { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); grid-template-rows: auto auto 1fr auto; gap: 0 32px; padding: 0; }
+  .entrolix-expertise .entrolix-expertise__service + .entrolix-expertise__service { border-left: 0; border-top: 1px solid #b2c6df26; padding-top: 32px; }
+  .entrolix-expertise .entrolix-expertise__service + .entrolix-expertise__service::before { display: none; }
+  .entrolix-expertise .entrolix-expertise__image { grid-column: 1; grid-row: 1 / 5; align-self: center; aspect-ratio: 4 / 3; min-height: 0; margin: 0; }
+  .entrolix-expertise .entrolix-expertise__image img { position: absolute; inset: 0; }
+  .entrolix-expertise .entrolix-expertise__label { grid-column: 2; margin-bottom: 14px; }
+  .entrolix-expertise .entrolix-expertise__service-title { grid-column: 2; font-size: 26px; }
+  .entrolix-expertise .entrolix-expertise__description { grid-column: 2; max-width: none; }
+  .entrolix-expertise .entrolix-expertise__link { grid-column: 2; margin-top: 15px; }
+}
+@media (max-width: 700px) {
+  .entrolix-expertise .entrolix-expertise__intro { grid-template-columns: 1fr; gap: 24px; }
+  .entrolix-expertise .entrolix-expertise__summary { justify-self: start; max-width: 540px; }
+}
+@media (max-width: 600px) {
+  .entrolix-expertise { padding-bottom: 72px; }
+  .entrolix-expertise .entrolix-expertise__inner { width: calc(100% - 40px); padding-top: 48px; }
+  .entrolix-expertise .entrolix-expertise__intro { margin-bottom: 38px; }
+  .entrolix-expertise .entrolix-expertise__eyebrow { font-size: 10px; margin-bottom: 18px; }
+  .entrolix-expertise .entrolix-expertise__title { font-size: clamp(32px, 8vw, 44px); }
+  .entrolix-expertise .entrolix-expertise__grid { gap: 34px; }
+  .entrolix-expertise .entrolix-expertise__service { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto 1fr auto; gap: 0; }
+  .entrolix-expertise .entrolix-expertise__service + .entrolix-expertise__service { padding-top: 32px; }
+  .entrolix-expertise .entrolix-expertise__label { grid-column: 1; margin-bottom: 18px; }
+  .entrolix-expertise .entrolix-expertise__image { grid-column: 1; grid-row: auto; aspect-ratio: 4 / 3; min-height: 0; margin-bottom: 23px; }
+  .entrolix-expertise .entrolix-expertise__service-title { grid-column: 1; font-size: 26px; margin-bottom: 12px; }
+  .entrolix-expertise .entrolix-expertise__description { grid-column: 1; font-size: 15px; line-height: 1.75; }
+  .entrolix-expertise .entrolix-expertise__link { grid-column: 1; margin-top: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrolix-expertise .entrolix-expertise__image img, .entrolix-expertise .entrolix-expertise__link, .entrolix-expertise .entrolix-expertise__link > svg { transition: none; transform: none; }
+}

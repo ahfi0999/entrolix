@@ -1,9 +1,16 @@
 node_modules/
+.cache/
 dist/
 .env
+.env.*
+!.env.example
 .venv/
 __pycache__/
 *.py[cod]
 db.sqlite3
 .DS_Store
 postgres-setup.log
+
+# Local image-generation intermediates and hosting credentials.
+frontend/output/
+.vercel/

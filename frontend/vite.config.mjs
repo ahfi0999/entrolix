@@ -1,9 +1,34 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync, readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
-import { defineConfig } from 'vite'
+import { fileURLToPath } from 'node:url'
+import { defineConfig, loadEnv } from 'vite'
+import { createEnquiryHandler } from './server/enquiry.mjs'
+
+function enquiryApi() {
+  let env
+  const mount = server => {
+    const handle = createEnquiryHandler({ env, local: true })
+    server.middlewares.use((request, response, next) => {
+      if (request.url?.split('?')[0] !== '/api/enquiry') return next()
+      void handle(request, response)
+    })
+  }
+  return {
+    name: 'server-only-enquiry-api',
+    configResolved(config) {
+      // loadEnv with no prefix is used only here, never injected via define.
+      const values = { ...loadEnv(config.mode, config.envDir, ''), ...process.env }
+      env = Object.fromEntries(['RESEND_API_KEY', 'RESEND_FROM', 'ENQUIRY_TO', 'SITE_ORIGIN'].map(key => [key, values[key]]))
+    },
+    configureServer: mount,
+    configurePreviewServer: mount,
+  }
+}
 
 export default defineConfig({
-  plugins: [{
+  // Resolve against this file, not the shell's working directory.
+  cacheDir: fileURLToPath(new URL('./.cache/vite/', import.meta.url)),
+  plugins: [enquiryApi(), {
     name: 'prerendered-preview-routes',
     // Match the production host's directory-index behavior for clean URLs.
     configurePreviewServer(server) {
@@ -11,10 +36,19 @@ export default defineConfig({
       server.middlewares.use((request, response, next) => {
         if (!['GET', 'HEAD'].includes(request.method)) return next()
         const url = new URL(request.url, 'http://localhost')
-        // Only named page paths enter this middleware; assets use Vite's handler.
-        if (!/^\/(?:[a-z0-9-]+\/?)*$/i.test(url.pathname)) return next()
-        const pathname = url.pathname.replace(/\/+$/, '')
-        const entry = path.join(output, pathname.slice(1), 'index.html')
+        let pathname
+        try { pathname = decodeURIComponent(url.pathname).replace(/\/+$/, '') }
+        catch { response.statusCode = 400; response.end('Invalid URL'); return }
+        const requested = path.resolve(output, `.${pathname || '/'}`)
+        if (requested !== output && !requested.startsWith(output + path.sep)) {
+          response.statusCode = 400
+          response.end('Invalid path')
+          return
+        }
+        // Existing assets use Vite's static handler; missing assets must not
+        // fall through to its SPA homepage fallback with a misleading HTTP 200.
+        if (statSync(requested, { throwIfNoEntry: false })?.isFile()) return next()
+        const entry = path.join(requested, 'index.html')
         if (existsSync(entry)) {
           request.url = `${pathname}/index.html${url.search}`
           return next()

@@ -1,0 +1,118 @@
+/* Protected navbar: every selector and design token is local to this hero. */
+.entrolix-hero {
+  --hero-navy: #050e17;
+  --hero-white: #f8f8fa;
+  --hero-muted: #c1c3cc;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--hero-navy);
+  color: var(--hero-white);
+  font-family: 'DM Sans', sans-serif;
+}
+.entrolix-hero .entrolix-hero__visual { position: absolute; z-index: -1; inset: 0; overflow: hidden; }
+.entrolix-hero .entrolix-hero__photo { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.entrolix-hero .entrolix-hero__visual::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, #050e17b3 0%, #050e1799 28%, #050e1730 48%, #050e1700 72%),
+    linear-gradient(0deg, #050e17 0%, #050e17e6 12%, #050e1700 26%);
+}
+.entrolix-hero .entrolix-hero__layout,
+.entrolix-hero .entrolix-hero__services { width: min(1600px, 88.8%); margin-inline: auto; }
+.entrolix-hero .entrolix-hero__layout { position: relative; min-height: clamp(590px, 40vw, 710px); padding-block: clamp(58px, 4.4vw, 80px) 94px; }
+.entrolix-hero .entrolix-hero__copy { position: relative; z-index: 2; width: 62%; }
+.entrolix-hero .entrolix-hero__eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin: 0 0 24px; color: #dedfe5; font-size: clamp(10px, .94vw, 16px); font-weight: 400; line-height: 1.7; letter-spacing: .26em; }
+.entrolix-hero .entrolix-hero__title { margin: 0; color: var(--hero-white); font-family: Georgia, 'Times New Roman', serif; font-size: clamp(48px, 4.9vw, 86px); line-height: .99; font-weight: 400; letter-spacing: -.045em; }
+.entrolix-hero .entrolix-hero__line { display: block; overflow: hidden; padding-block: .08em .16em; margin-block: -.08em -.16em; }
+.entrolix-hero .entrolix-hero__line > span { display: block; }
+.entrolix-hero .entrolix-hero__accent { color: #8b9bff; }
+@supports (background-clip: text) {
+  .entrolix-hero .entrolix-hero__accent { width: fit-content; max-width: 100%; padding-right: .06em; background: linear-gradient(100deg, #56adfb 4%, #658bff 48%, #b28bff 100%); background-clip: text; color: transparent; }
+}
+.entrolix-hero .entrolix-hero__description { max-width: 590px; margin: 32px 0 0; color: var(--hero-muted); font-size: clamp(17px, 1.34vw, 23px); line-height: 1.42; }
+.entrolix-hero .entrolix-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; margin-top: 38px; }
+.entrolix-hero .entrolix-hero__primary,
+.entrolix-hero .entrolix-hero__secondary { display: inline-flex; justify-content: center; align-items: center; gap: 18px; min-height: 60px; padding: 15px 26px; border: 1px solid transparent; border-radius: 12px; color: white; font-size: clamp(15px, 1.13vw, 19px); font-weight: 500; line-height: 1.4; text-decoration: none; transition: box-shadow 180ms ease, background-color 180ms ease; }
+.entrolix-hero .entrolix-hero__primary { background: linear-gradient(105deg, #3069df, #6144df 64%, #8751d9); box-shadow: 0 10px 32px #2b65ec25; }
+.entrolix-hero .entrolix-hero__secondary { background: linear-gradient(#080f18eb, #080f18eb) padding-box, linear-gradient(110deg, #9a70ff, #e1d9ff) border-box; }
+.entrolix-hero .entrolix-hero__primary:hover { box-shadow: 0 10px 36px #6472ff60; }
+.entrolix-hero .entrolix-hero__secondary:hover { background-color: #242340; }
+.entrolix-hero :is(.entrolix-hero__primary, .entrolix-hero__secondary) > svg { flex-shrink: 0; transition: transform 180ms ease; }
+.entrolix-hero :is(.entrolix-hero__primary, .entrolix-hero__secondary):is(:hover, :focus-visible) > svg { transform: translateX(3px); }
+.entrolix-hero a:focus-visible { outline: 3px solid #b4d5ff; outline-offset: 5px; }
+.entrolix-hero .entrolix-hero__constellation { position: absolute; z-index: 1; top: 64px; right: -3.3%; width: 51%; aspect-ratio: 720 / 390; pointer-events: none; }
+.entrolix-hero .entrolix-hero__orbits { position: absolute; inset: 0; width: 100%; height: 100%; }
+.entrolix-hero .entrolix-hero__node { position: absolute; display: flex; align-items: center; gap: 14px; color: #fff; font-size: clamp(12px, 1vw, 17px); line-height: 1.35; text-shadow: 0 2px 10px #000; }
+.entrolix-hero .entrolix-hero__node-icon { display: grid; place-items: center; flex-shrink: 0; width: clamp(48px, 4vw, 70px); aspect-ratio: 1; border: 1px solid #b3d5ffb3; border-radius: 50%; color: #a0d4ff; background: #07132135; box-shadow: inset 0 0 18px #b9d6ff0a; }
+.entrolix-hero .entrolix-hero__node--training { left: 18.5%; top: 2%; }
+.entrolix-hero .entrolix-hero__node--training > span:last-child { max-width: 80px; }
+.entrolix-hero .entrolix-hero__node--training .entrolix-hero__node-icon { color: #b6a2ff; }
+.entrolix-hero .entrolix-hero__node--consulting { left: 1%; top: 54%; }
+.entrolix-hero .entrolix-hero__node--recruitment { right: 0; top: 31%; }
+.entrolix-hero .entrolix-hero__node--recruitment .entrolix-hero__node-icon { color: #fff; border-color: #ffffff9c; background: #ffffff12; }
+.entrolix-hero .entrolix-hero__services { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding-block: 0 48px; }
+.entrolix-hero .entrolix-hero__service { position: relative; min-width: 0; display: grid; grid-template-columns: 72px minmax(0, 1fr); column-gap: 35px; align-content: start; padding: 0 38px; text-decoration: none; }
+.entrolix-hero .entrolix-hero__service:first-child { padding-left: 4px; }
+.entrolix-hero .entrolix-hero__service:last-child { padding-right: 0; }
+.entrolix-hero .entrolix-hero__service + .entrolix-hero__service::before { content: ''; position: absolute; top: 32px; bottom: 0; left: 0; width: 1px; background: #8895a74d; }
+.entrolix-hero .entrolix-hero__number { grid-column: 1 / -1; margin-bottom: 15px; color: #929ba8; font-size: 16px; line-height: 1.4; }
+.entrolix-hero .entrolix-hero__service-icon { display: grid; place-items: center; width: 68px; height: 68px; border: 1px solid #4d99ecbb; border-radius: 50%; color: #72c3ff; background: #0714234d; transition: background-color 180ms ease, border-color 180ms ease; }
+.entrolix-hero .entrolix-hero__service-copy { padding-top: 5px; }
+.entrolix-hero .entrolix-hero__service-copy h2 { margin: 0 0 4px; color: var(--hero-white); font: 500 clamp(17px, 1.32vw, 23px)/1.4 'DM Sans', sans-serif; letter-spacing: -.035em; }
+.entrolix-hero .entrolix-hero__service-copy p { max-width: 280px; margin: 0; color: var(--hero-muted); font-size: clamp(14px, 1.12vw, 19px); line-height: 1.45; }
+.entrolix-hero .entrolix-hero__service:is(:hover, :focus-visible) .entrolix-hero__service-icon { border-color: #aacaff; background: #274b794d; }
+.entrolix-hero .entrolix-hero__service:is(:hover, :focus-visible) h2 { color: #a9d6ff; }
+@media (min-width: 901px) and (max-width: 1200px) {
+  .entrolix-hero .entrolix-hero__copy { width: 65%; }
+  .entrolix-hero .entrolix-hero__description { max-width: 460px; }
+  .entrolix-hero .entrolix-hero__actions { gap: 14px; }
+  .entrolix-hero .entrolix-hero__primary, .entrolix-hero .entrolix-hero__secondary { padding-inline: 19px; gap: 12px; min-height: 54px; }
+  .entrolix-hero .entrolix-hero__constellation { width: 45%; top: 70px; }
+  .entrolix-hero .entrolix-hero__service { grid-template-columns: 58px minmax(0, 1fr); gap: 0 20px; padding-inline: 24px; }
+  .entrolix-hero .entrolix-hero__service-icon { width: 56px; height: 56px; }
+}
+@media (max-width: 900px) {
+  .entrolix-hero .entrolix-hero__layout, .entrolix-hero .entrolix-hero__services { width: calc(100% - 48px); }
+  .entrolix-hero .entrolix-hero__layout { padding-block: 54px 300px; min-height: 0; }
+  .entrolix-hero .entrolix-hero__copy { width: 100%; }
+  .entrolix-hero .entrolix-hero__title { font-size: clamp(40px, 7.4vw, 66px); line-height: 1.06; }
+  .entrolix-hero .entrolix-hero__eyebrow { font-size: 11px; gap: 10px; letter-spacing: .2em; }
+  .entrolix-hero .entrolix-hero__description { max-width: 560px; font-size: 18px; }
+  .entrolix-hero .entrolix-hero__visual { bottom: 150px; }
+  .entrolix-hero .entrolix-hero__photo { object-position: 72% bottom; }
+  .entrolix-hero .entrolix-hero__visual::after { background: linear-gradient(180deg, #050e17fa 0%, #050e17e8 35%, #050e1730 65%, #050e17 100%), linear-gradient(90deg, #050e1770, transparent); }
+  .entrolix-hero .entrolix-hero__constellation { display: none; }
+  .entrolix-hero .entrolix-hero__services { padding-bottom: 32px; }
+  .entrolix-hero .entrolix-hero__service { grid-template-columns: 1fr; padding-inline: 22px; gap: 12px; }
+  .entrolix-hero .entrolix-hero__number { margin-bottom: 0; font-size: 13px; }
+  .entrolix-hero .entrolix-hero__service-icon { width: 56px; height: 56px; }
+  .entrolix-hero .entrolix-hero__service-copy { padding-top: 0; }
+}
+@media (max-width: 600px) {
+  .entrolix-hero .entrolix-hero__layout, .entrolix-hero .entrolix-hero__services { width: calc(100% - 40px); }
+  .entrolix-hero .entrolix-hero__layout { padding-block: 42px 250px; }
+  .entrolix-hero .entrolix-hero__title { font-size: clamp(28px, 7.65vw, 46px); letter-spacing: -.045em; line-height: 1.12; }
+  .entrolix-hero .entrolix-hero__eyebrow { font-size: 8px; letter-spacing: .18em; gap: 8px; margin-bottom: 25px; }
+  .entrolix-hero .entrolix-hero__description { font-size: 16px; line-height: 1.6; margin-top: 24px; }
+  .entrolix-hero .entrolix-hero__actions { margin-top: 28px; gap: 12px; }
+  .entrolix-hero .entrolix-hero__primary, .entrolix-hero .entrolix-hero__secondary { min-height: 52px; padding: 13px 18px; font-size: 14px; gap: 14px; border-radius: 10px; }
+  .entrolix-hero .entrolix-hero__visual { bottom: 340px; }
+  .entrolix-hero .entrolix-hero__services { grid-template-columns: 1fr; padding-bottom: 24px; }
+  .entrolix-hero .entrolix-hero__service { grid-template-columns: 20px 54px minmax(0, 1fr); padding: 20px 0; gap: 16px; align-items: start; }
+  .entrolix-hero .entrolix-hero__service:first-child { padding-left: 0; }
+  .entrolix-hero .entrolix-hero__service + .entrolix-hero__service::before { top: 0; bottom: auto; width: 100%; height: 1px; }
+  .entrolix-hero .entrolix-hero__number { grid-column: auto; margin-top: 17px; font-size: 12px; }
+  .entrolix-hero .entrolix-hero__service-icon { width: 52px; height: 52px; }
+  .entrolix-hero .entrolix-hero__service-icon > svg { width: 26px; height: 26px; }
+  .entrolix-hero .entrolix-hero__service-copy h2 { font-size: 18px; }
+  .entrolix-hero .entrolix-hero__service-copy p { font-size: 13px; line-height: 1.5; }
+}
+@media (max-width: 389px) {
+  .entrolix-hero .entrolix-hero__eyebrow { gap: 6px; font-size: 7px; }
+  .entrolix-hero .entrolix-hero__actions { align-items: stretch; flex-direction: column; }
+  .entrolix-hero .entrolix-hero__service { gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrolix-hero *, .entrolix-hero *::before, .entrolix-hero *::after { transition: none !important; animation: none !important; }
+  .entrolix-hero :is(.entrolix-hero__primary, .entrolix-hero__secondary) > svg { transform: none !important; }
+}

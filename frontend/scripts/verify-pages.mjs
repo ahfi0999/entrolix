@@ -3,10 +3,10 @@ import { fileURLToPath } from 'node:url'
 import { readFile } from 'node:fs/promises'
 import { createElement, act } from 'react'
 import { renderToString } from 'react-dom/server'
-import { createRoot, hydrateRoot } from 'react-dom/client'
 import { createServer } from 'vite'
 
 const server = await createServer({
+  configLoader: 'runner',
   root: fileURLToPath(new URL('../', import.meta.url)),
   server: { middlewareMode: true, watch: null, ws: false },
   optimizeDeps: { noDiscovery: true, include: [] },
@@ -21,19 +21,17 @@ try {
   assert.equal(offerings.length, 13)
   assert.equal(pagePaths.length, 20)
   const rendered = new Map(pagePaths.map(path => [path, renderToString(createElement(App, { initialPath: path }))]))
-  const titles = new Set()
   let checkedLinks = 0
   for (const [pathname, html] of rendered) {
     const route = resolveRoute(pathname)
     assert.equal((html.match(/<main[ >]/g) || []).length, 1, pathname + ': one main landmark')
     assert.equal((html.match(/<h1[ >]/g) || []).length, 1, pathname + ': one primary heading')
-    assert.ok(!titles.has(route.title), pathname + ': unique title')
-    titles.add(route.title)
+    assert.equal(route.title, 'Entrolix', pathname + ': consistent browser title')
     assert.equal(resolveRoute(pathname + '/').type, route.type, pathname + ': trailing slash')
     if (['services', 'category', 'offering'].includes(route.type)) {
       assert.ok(html.includes('class="service-hero"'), pathname + ': shared dark hero')
-      assert.ok(html.includes('button button-lime'), pathname + ': lime hero CTA')
-      assert.ok(html.includes('Where we can help.'), pathname + ': capability section')
+      assert.ok(html.includes('button button-lime'), pathname + ': existing hero CTA hook preserved')
+      assert.ok(html.includes(route.type === 'offering' ? 'class="detail-section"' : 'service-capabilities'), pathname + ': capability section')
       assert.ok(html.includes('Your questions, answered.'), pathname + ': FAQ section')
       assert.ok(html.includes('<details>'), pathname + ': native FAQ disclosures')
     }
@@ -55,10 +53,13 @@ try {
     }
   }
   assert.equal(resolveRoute('/missing-page').type, 'not-found')
+  assert.equal(resolveRoute('/missing-page').title, 'Entrolix', 'Not-found pages retain the brand title')
+  assert.match(rendered.get('/contact'), /<fieldset disabled=""/, 'Static form stays disabled before hydration')
+  assert.match(rendered.get('/contact'), /<noscript>.*?mailto:info@entrolix\.com/s, 'Contact offers a no-JavaScript email fallback')
   assert.ok(rendered.get('/consulting/rms').includes('recruitment management system'))
-  console.log('PASS 20 pages: all 13 offerings, complete detail content, unique titles, trailing slashes, and ' + checkedLinks + ' internal links')
+  console.log('PASS 20 pages: all 13 offerings, complete detail content, Entrolix titles, trailing slashes, and ' + checkedLinks + ' internal links')
 
-  const { JSDOM } = await import('jsdom')
+  const { JSDOM, VirtualConsole } = await import('jsdom')
   const offeringIcons = {
     '/training/servicenow': 'workflow',
     '/training/ai': 'brain-circuit',
@@ -84,7 +85,19 @@ try {
   for (const [pathname, html] of rendered) {
     const page = new JSDOM(html)
     const navigation = page.window.document.querySelector('.primary-links')
-    assert.equal(page.window.document.querySelector('header .nav-ctas'), null, pathname + ': no header CTA group')
+    assert.equal(page.window.document.querySelectorAll('header .reference-nav-cta').length, 1, pathname + ': one reference contact CTA')
+    assert.equal(page.window.document.querySelector('header .reference-nav-cta').getAttribute('href'), '/contact')
+    for (const selector of ['header .header-brand', 'footer .footer-wordmark']) {
+      const brand = page.window.document.querySelector(selector)
+      assert.equal(brand.getAttribute('href'), '/')
+      assert.equal(brand.getAttribute('aria-label'), 'Entrolix home')
+      assert.equal(brand.querySelector('img').getAttribute('src'), '/entrolix-wordmark-dark-v2.png')
+      assert.equal(brand.querySelector('img').getAttribute('alt'), '', 'The link provides the accessible brand name')
+      assert.equal(brand.querySelector('img').getAttribute('width'), '180')
+      assert.equal(brand.querySelector('img').getAttribute('height'), '50')
+      assert.equal(brand.querySelector('span'), null, 'Use the supplied full wordmark without duplicate text')
+    }
+    assert.equal(page.window.document.querySelector('header').classList.contains('reference-header--home'), pathname === '/')
     assert.equal(page.window.document.querySelector('.motion-toggle'), null, pathname + ': no play/pause control')
     assert.equal(page.window.document.querySelectorAll('.header-controls button').length, 1, pathname + ': only the mobile menu control remains')
     assert.ok(!page.window.document.querySelector('header').textContent.includes('Our Services'), pathname + ': no Our Services header CTA')
@@ -96,6 +109,9 @@ try {
     else if (currentGroup) {
       assert.equal(navigation.querySelector('#' + currentGroup.id + '-menu-trigger').getAttribute('aria-current'), 'true')
       assert.ok(navigation.querySelector('#' + currentGroup.id + '-menu-trigger').classList.contains('active'))
+    } else if (pathname === '/about' || pathname === '/contact') {
+      assert.equal(navigation.querySelector(`a[href="${pathname}"]`).getAttribute('aria-current'), 'page')
+      assert.equal(active.length, 1)
     } else assert.equal(active.length, 0)
     assert.equal(navigation.querySelectorAll('.dropdown-icon img').length, 0, pathname + ': no raster dropdown icons')
     assert.equal(page.window.document.querySelectorAll('header img[src^="/icons/"]').length, 0, pathname + ': no header icon image downloads')
@@ -122,7 +138,20 @@ try {
     page.window.close()
   }
   const headerStyles = await readFile(new URL('../src/service-design.css', import.meta.url), 'utf8')
-  assert.ok(headerStyles.includes("font-family: 'Manrope', sans-serif"))
+  const referenceStyles = await readFile(new URL('../src/components/reference-header.css', import.meta.url), 'utf8')
+  const footerStyles = await readFile(new URL('../src/components/site-closing.css', import.meta.url), 'utf8')
+  for (const [css, selector] of [[referenceStyles, '.site-header.reference-header .reference-brand-wordmark'], [footerStyles, '.site-footer .footer-wordmark img']]) {
+    const logoRule = css.slice(css.indexOf(selector)).split('}')[0]
+    assert.ok(logoRule.includes('object-fit: contain'), 'Logo must not be cropped')
+    assert.ok(!logoRule.includes('filter:'), 'Logo antialiased edges must not be thresholded')
+    assert.ok(logoRule.includes('width: 180px; height: 72px'), 'Logo box preserves the complete canvas aspect ratio')
+  }
+  assert.ok(referenceStyles.includes("font-family: 'DM Sans', sans-serif"))
+  assert.ok(referenceStyles.includes('linear-gradient(90deg, #50caff, #c185ff)'), 'Reference active-link gradient')
+  assert.ok(referenceStyles.includes('.reference-header--home ~ .home-page'), 'Homepage image extends behind navbar')
+  assert.ok(referenceStyles.includes('[data-header-scrolled="true"]'), 'Scrolled header remains readable regardless of motion preference')
+  assert.ok(referenceStyles.includes('@media (max-width: 1023px)'), 'Six navigation items collapse on tablets')
+  assert.ok(referenceStyles.includes('max-height: calc(100dvh - var(--header-height))'), 'Mobile navigation stays scrollable')
   assert.ok(headerStyles.includes('.services-trigger.active::after'))
   assert.ok(headerStyles.includes('width: min(300px, calc(100vw - 40px))'), 'Compact 300px primary dropdowns')
   assert.ok(headerStyles.includes('width: 264px; padding-left: 8px'), 'Compact custom-applications flyout')
@@ -141,28 +170,31 @@ try {
     return channels[0] * .2126 + channels[1] * .7152 + channels[2] * .0722
   }
   const navColors = Object.fromEntries(['text', 'muted', 'active', 'border', 'highlight'].map(name => {
-    const match = headerStyles.match(new RegExp('--nav-' + name + ':\\s*#([a-f0-9]{6})', 'i'))
+    const match = referenceStyles.match(new RegExp('--nav-' + name + ':\\s*#([a-f0-9]{6})', 'i'))
     assert.ok(match, 'Header color token exists: ' + name)
-    const channels = match[1].match(/../g)
-    assert.equal(new Set(channels).size, 1, 'Header color is neutral grayscale: ' + name)
     return [name, match[1]]
   }))
   assert.ok(headerStyles.includes('.reading-progress span { background: #525252; }'), 'Header progress strip is neutral')
   assert.ok(headerStyles.includes('.dropdown-icon svg { width: 20px; height: 20px; fill: none; }'), 'Compact outline SVG styling')
-  for (const [foreground, background] of [[navColors.text, 'ffffff'], [navColors.active, navColors.highlight], [navColors.muted, 'ffffff'], [navColors.muted, navColors.highlight], [navColors.muted, 'fafafa']]) {
+  for (const [foreground, background] of [[navColors.text, '08121e'], [navColors.active, navColors.highlight], [navColors.muted, '0c1827'], [navColors.muted, navColors.highlight]]) {
     const values = [luminance(foreground), luminance(background)].sort((a, b) => b - a)
     assert.ok((values[0] + .05) / (values[1] + .05) >= 4.5, 'Header text contrast: ' + foreground + ' on ' + background)
   }
-  console.log('PASS header presentation: unique service-specific outline icons including nested applications, active-page semantics, logo label, neutral colors, Manrope, mobile/reduced-motion rules, and text contrast')
-  const dom = new JSDOM('<!doctype html><html><head><title>Entrolix</title><meta name="description"><meta property="og:title"><meta property="og:description"><meta name="robots"></head><body><div id="root"></div></body></html>', { url: 'http://localhost/training' })
+  console.log('PASS header presentation: reference branding, six links, contact CTA, dark palette, home overlay, scroll state, mobile/reduced-motion rules, outline icons and text contrast')
+  const domErrors = []
+  const virtualConsole = new VirtualConsole().on('jsdomError', error => domErrors.push(error))
+  const dom = new JSDOM('<!doctype html><html><head><title>Entrolix</title><meta name="description"><meta property="og:title"><meta property="og:description"><meta name="robots"></head><body><div id="root"></div></body></html>', { url: 'http://localhost/training', virtualConsole })
   globalThis.window = dom.window
   globalThis.document = dom.window.document
   globalThis.FormData = dom.window.FormData
   globalThis.IS_REACT_ACT_ENVIRONMENT = true
+  // React detects browser input support when this module loads. Initialize the
+  // DOM first so focus/change tests do not enter its legacy IE event fallback.
+  const { createRoot, hydrateRoot } = await import('react-dom/client')
   dom.window.HTMLElement.prototype.scrollIntoView = function () {}
   let root = createRoot(document.getElementById('root'))
   await act(async () => root.render(createElement(App, { initialPath: '/training' })))
-  assert.equal(document.title, 'Training | Entrolix')
+  assert.equal(document.title, 'Entrolix')
   const toggle = document.querySelector('.menu-button')
   await act(async () => toggle.click())
   assert.equal(toggle.getAttribute('aria-expanded'), 'true')
@@ -170,8 +202,18 @@ try {
   assert.equal(toggle.getAttribute('aria-expanded'), 'false')
   assert.equal(document.activeElement, toggle)
   const navItems = [...document.querySelectorAll('.primary-links > a, .primary-links > .services-disclosure > button')]
-  assert.deepEqual(navItems.map(item => item.textContent.trim()), ['Home', 'Training Services', 'IT Solutions', 'Recruitment'])
-  assert.equal(document.querySelector('header .button'), null, 'Header contains navigation without CTA buttons')
+  assert.deepEqual(navItems.map(item => item.textContent.trim()), ['Home', 'Training Services', 'IT Solutions', 'Recruitment', 'About', 'Contact'])
+  assert.equal(document.querySelector('header .reference-nav-cta').textContent.trim(), 'Get in Touch')
+  await act(async () => {
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 100 })
+    window.dispatchEvent(new window.Event('scroll'))
+  })
+  assert.equal(document.querySelector('header').dataset.headerScrolled, 'true')
+  await act(async () => {
+    Object.defineProperty(window, 'scrollY', { configurable: true, value: 0 })
+    window.dispatchEvent(new window.Event('scroll'))
+  })
+  assert.equal(document.querySelector('header').dataset.headerScrolled, 'false')
   const key = (target, value) => target.dispatchEvent(new window.KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }))
   const triggers = serviceGroups.map(group => document.getElementById(group.id + '-menu-trigger'))
   const dropdowns = serviceGroups.map(group => document.getElementById(group.id + '-dropdown'))
@@ -342,62 +384,190 @@ try {
   summary.click()
   assert.ok(summary.parentElement.open)
   await act(async () => root.unmount())
-  console.log('PASS navigation: four primary items without header CTAs, exactly two IT Solutions options, LMS/HRMS/RMS/CRM flyout, hover/click, keyboard focus, three-level mobile Escape, dismissals and FAQs')
+  console.log('PASS navigation: six primary items and contact CTA, scroll state, exactly two IT Solutions options, LMS/HRMS/RMS/CRM flyout, hover/click, keyboard focus, three-level mobile Escape, dismissals and FAQs')
 
+  const input = name => document.querySelector(`[name="${name}"]`)
+  const values = { name: 'Casey Test', email: 'casey@example.com', phone: '+44 20 1234 5678', company: 'Test & Review', subject: 'A platform enquiry & next steps', message: 'We need candidate tracking & interview feedback.' }
+  const fill = (overrides = {}) => Object.entries({ ...values, ...overrides }).forEach(([name, value]) => { input(name).value = value })
+  const send = () => act(async () => document.querySelector('form').requestSubmit())
+  const mountContact = async (endpoint, path = '/contact') => {
+    window.history.replaceState({}, '', path)
+    root = createRoot(document.getElementById('root'))
+    await act(async () => root.render(createElement(ContactPage, { endpoint })))
+  }
   let networkCalls = 0
   globalThis.fetch = async () => { networkCalls++; throw new Error('Unexpected live network call') }
-  window.history.replaceState({}, '', '/contact?service=consulting%2Frms')
-  root = createRoot(document.getElementById('root'))
-  await act(async () => root.render(createElement(ContactPage, { endpoint: '' })))
-  assert.equal(document.querySelector('select').value, 'consulting/rms')
-  const fill = () => {
-    document.querySelector('[name="name"]').value = 'Casey Test'
-    document.querySelector('[name="email"]').value = 'casey@example.com'
-    document.querySelector('[name="organization"]').value = 'Test & Review'
-    document.querySelector('[name="message"]').value = 'We need candidate tracking & interview feedback.'
+  await mountContact('https://formspree.io/f/xzedqjpr')
+  assert.equal(document.querySelector('fieldset').disabled, false)
+  assert.equal(document.querySelector('h1').textContent, "Let's start a conversation.")
+  assert.equal(document.querySelector('select'), null, 'No service or category selector')
+  assert.deepEqual([...document.querySelectorAll('fieldset input, fieldset textarea')].map(field => field.name), Object.keys(values), 'Exactly six fields in the requested order')
+  assert.equal(document.querySelectorAll('form [required]').length, 4)
+  assert.equal(input('phone').required, false)
+  assert.equal(input('company').required, false)
+  await send()
+  assert.equal(document.querySelectorAll('[aria-invalid="true"]').length, 4, 'Required-field errors are inline')
+  assert.equal(document.activeElement, input('name'), 'Focus moves to first invalid field')
+  for (const field of document.querySelectorAll('[aria-invalid="true"]')) {
+    assert.ok(document.getElementById(field.getAttribute('aria-describedby'))?.textContent, 'Field error is associated')
   }
+  assert.ok(document.querySelector('[role="alert"]'))
+  assert.equal(networkCalls, 0)
+  fill({ name: '   ', subject: '  ', message: '   ' })
+  await send()
+  assert.equal(document.querySelectorAll('[aria-invalid="true"]').length, 3, 'Whitespace is not accepted as required content')
+  fill({ email: 'not-an-email' })
+  await send()
+  assert.equal(document.querySelectorAll('[aria-invalid="true"]').length, 1)
+  assert.ok(document.getElementById('enquiry-email-error').textContent.includes('valid email'))
+  assert.equal(document.activeElement, input('email'))
+  await act(async () => {
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(input('email'), values.email)
+    input('email').dispatchEvent(new window.Event('input', { bubbles: true }))
+  })
+  assert.equal(document.getElementById('enquiry-email-error'), null, 'Inline error clears as the visitor corrects the value')
+  input('email').value = 'still-invalid'
+  await act(async () => input('email').dispatchEvent(new window.FocusEvent('focusout', { bubbles: true })))
+  assert.ok(document.getElementById('enquiry-email-error'), 'Validation also runs on leaving a field')
+  fill({ email: 'name@', subject: 'x'.repeat(181) })
+  await send()
+  assert.ok(document.getElementById('enquiry-subject-error'))
+  assert.equal(networkCalls, 0)
   fill()
-  await act(async () => document.querySelector('form').requestSubmit())
+  input('_gotcha').value = 'bot-filled'
+  await send()
+  assert.equal(networkCalls, 0, 'Honeypot prevents submission')
+  assert.equal(document.querySelector('.form-success'), null)
+  await act(async () => root.unmount())
+  console.log('PASS enquiry validation: six ordered fields, no selector, required/whitespace/email/length errors, accessible error associations, focus, optional fields and honeypot')
+
+  await mountContact('', '/contact?service=consulting%2Frms')
+  assert.equal(input('subject').value, 'Enquiry: Custom RMS Development')
+  fill()
+  await send()
   const draft = document.querySelector('.email-draft a')
   assert.ok(draft)
   const email = new URL(draft.href)
   assert.equal(email.pathname, 'info@entrolix.com')
-  assert.equal(email.searchParams.get('subject'), 'Enquiry: Custom RMS Development')
-  assert.ok(email.searchParams.get('body').includes('Test & Review'))
+  assert.equal(email.searchParams.get('subject'), values.subject, 'Visitor can edit the prefilled subject')
+  assert.ok(email.searchParams.get('body').includes(values.company))
+  assert.ok(email.searchParams.get('body').includes(values.phone))
+  assert.ok(email.searchParams.get('body').includes(values.message))
   assert.ok(document.querySelector('.email-draft').textContent.includes('Nothing has been sent yet'))
+  assert.equal(document.querySelector('.form-success'), null)
+  assert.equal(input('name').value, values.name, 'Draft preparation retains input')
   assert.equal(networkCalls, 0)
+  fill({ phone: '', company: '' })
+  await send()
+  assert.ok(new URL(document.querySelector('.email-draft a').href).searchParams.get('body').includes('Phone: Not provided'))
   await act(async () => root.unmount())
-  console.log('PASS email fallback: service prefill, encoded enquiry draft, no automatic send')
+  console.log('PASS email fallback: encoded six-field draft, editable subject, optional empty fields, input retention, no network or fake success')
+
+  for (const item of offerings) {
+    await mountContact('', '/contact?service=' + encodeURIComponent(item.group + '/' + item.slug))
+    assert.equal(input('subject').value, 'Enquiry: ' + item.title)
+    await act(async () => root.unmount())
+  }
+  for (const group of serviceGroups) {
+    await mountContact('', '/contact?category=' + group.id)
+    assert.equal(input('subject').value, 'Enquiry: ' + group.title)
+    await act(async () => root.unmount())
+  }
+  await mountContact('', '/contact?service=not-real&category=not-real')
+  assert.equal(input('subject').value, '', 'Unknown query values are not inserted')
+  await act(async () => root.unmount())
+  console.log('PASS all 13 service and 3 category enquiry URLs: subject prefill without a dropdown')
 
   let submission
   let finishRequest
   globalThis.fetch = (url, options) => {
+    networkCalls++
     submission = { url, options }
     return new Promise(resolve => { finishRequest = resolve })
   }
-  root = createRoot(document.getElementById('root'))
-  await act(async () => root.render(createElement(ContactPage, { endpoint: 'https://formspree.io/f/test-only' })))
+  await mountContact('https://formspree.io/f/xzedqjpr')
   fill()
-  await act(async () => document.querySelector('form').requestSubmit())
+  const form = document.querySelector('form')
+  await act(async () => {
+    form.requestSubmit()
+    form.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }))
+  })
+  assert.equal(networkCalls, 1, 'Rapid same-tick duplicates are blocked')
   assert.ok(document.querySelector('fieldset').disabled)
+  assert.equal(form.getAttribute('aria-busy'), 'true')
+  assert.ok(document.querySelector('[role="status"]').textContent.includes('Sending'))
+  assert.equal(document.querySelector('.form-success'), null)
+  assert.equal(input('name').value, values.name, 'No premature reset')
+  assert.equal(submission.url, 'https://formspree.io/f/xzedqjpr')
+  assert.equal(form.getAttribute('action'), submission.url)
+  assert.equal(form.getAttribute('method'), 'POST')
+  assert.deepEqual(submission.options.headers, { Accept: 'application/json' }, 'No credentials or Resend headers are sent')
+  assert.equal(submission.options.body.has('organization'), false)
+  assert.equal(submission.options.body.get('_gotcha'), '')
   assert.equal(submission.options.method, 'POST')
-  assert.equal(submission.options.body.get('service'), 'Custom RMS Development')
-  assert.equal(submission.options.body.get('email'), 'casey@example.com')
-  await act(async () => finishRequest({ ok: true }))
+  for (const [key, value] of Object.entries(values)) assert.equal(submission.options.body.get(key), value)
+  assert.equal(submission.options.body.has('service'), false)
+  await act(async () => finishRequest({ ok: true, headers: { get: () => 'application/json' }, json: async () => ({ ok: true }) }))
   assert.ok(document.querySelector('.form-success'))
-  assert.equal(document.querySelector('[name="name"]').value, '')
+  assert.equal(form.getAttribute('aria-busy'), 'false')
+  for (const key of Object.keys(values)) assert.equal(input(key).value, '', 'Reset only after backend success')
   await act(async () => root.unmount())
 
   globalThis.fetch = async () => ({ ok: false })
-  root = createRoot(document.getElementById('root'))
-  await act(async () => root.render(createElement(ContactPage, { endpoint: 'https://formspree.io/f/test-only' })))
+  await mountContact('https://formspree.io/f/xzedqjpr')
   fill()
-  await act(async () => document.querySelector('form').requestSubmit())
-  assert.ok(document.querySelector('[role="alert"]'))
-  assert.equal(document.querySelector('[name="name"]').value, 'Casey Test')
-  assert.ok(!document.querySelector('.form-success'))
+  await send()
+  assert.ok(document.querySelector('.form-error[role="alert"]'))
+  for (const [key, value] of Object.entries(values)) assert.equal(input(key).value, value, 'HTTP failure retains ' + key)
+  assert.equal(document.querySelector('.form-success'), null)
+  assert.equal(document.querySelector('fieldset').disabled, false, 'Retry is enabled')
+  globalThis.fetch = async () => ({ ok: true, headers: { get: () => 'application/json' }, json: async () => ({ errors: ['Provider rejected this request'] }) })
+  await send()
+  assert.ok(document.querySelector('.form-error'), 'JSON rejection is not a false success')
+  globalThis.fetch = async () => { throw new Error('Network unavailable') }
+  await send()
+  assert.ok(document.querySelector('.form-error'))
+  for (const [key, value] of Object.entries(values)) assert.equal(input(key).value, value, 'Network failure retains ' + key)
+  globalThis.fetch = async () => { throw new DOMException('Request timed out', 'TimeoutError') }
+  await send()
+  assert.ok(document.querySelector('.form-error'))
+  assert.equal(input('message').value, values.message)
+  globalThis.fetch = async () => ({ ok: true, headers: { get: () => 'application/json' }, json: async () => ({ ok: true }) })
+  await send()
+  assert.ok(document.querySelector('.form-success'), 'Retry can succeed')
+  assert.equal(input('message').value, '')
   await act(async () => root.unmount())
-  console.log('PASS form delivery with mocked responses: service payload, pending state, success reset, error retains input')
+  console.log('PASS mocked backend: six-field payload, pending status, duplicate prevention, confirmed-success reset, HTTP/JSON/network/timeout errors, retained input and successful retry')
+
+  // Omit the endpoint prop to verify the actual configured/default integration.
+  const formspreeRequests = []
+  globalThis.fetch = async (url, options) => {
+    formspreeRequests.push({ url, options })
+    return { ok: true, headers: { get: () => 'text/html' } }
+  }
+  await mountContact(undefined)
+  fill({ phone: '', company: '' })
+  await send()
+  assert.equal(formspreeRequests[0].url, 'https://formspree.io/f/xzedqjpr')
+  assert.equal(formspreeRequests[0].options.body.get('company'), '')
+  assert.ok(document.querySelector('.form-error'), 'HTML response must not claim success')
+  assert.equal(input('message').value, values.message)
+  for (const result of [{}, { ok: false }, { ok: true, errors: ['Rejected'] }, { ok: true, error: 'Rejected' }]) {
+    globalThis.fetch = async () => ({ ok: true, headers: { get: () => 'application/json' }, json: async () => result })
+    await send()
+    assert.ok(document.querySelector('.form-error'))
+    assert.equal(document.querySelector('.form-success'), null)
+    assert.equal(input('message').value, values.message)
+  }
+  globalThis.fetch = async () => ({ ok: true, headers: { get: () => 'application/json' }, json: async () => { throw new SyntaxError('Invalid JSON') } })
+  await send()
+  assert.ok(document.querySelector('.form-error'))
+  globalThis.fetch = async () => ({ ok: true, headers: { get: () => 'application/json' }, json: async () => ({ ok: true, next: '/thanks' }) })
+  await send()
+  assert.ok(document.querySelector('.form-success'))
+  assert.equal(input('message').value, '')
+  await act(async () => root.unmount())
+  console.log('PASS Formspree contract: exact configured endpoint, optional company/phone, JSON confirmation, malformed/error responses and retry')
 
   window.history.replaceState({}, '', '/contact?service=training%2Fai')
   const host = document.getElementById('root')
@@ -407,10 +577,12 @@ try {
     root = hydrateRoot(host, createElement(App, { initialPath: '/contact' }), { onRecoverableError: error => hydrationErrors.push(error.message) })
   })
   assert.deepEqual(hydrationErrors, [])
-  assert.equal(document.querySelector('select').value, 'training/ai')
+  assert.equal(input('subject').value, 'Enquiry: AI Training')
+  assert.equal(document.querySelector('main select'), null)
   await act(async () => root.unmount())
+  assert.deepEqual(domErrors, [], 'No unhandled simulated-browser exceptions')
   dom.window.close()
-  console.log('PASS prerender hydration: contact page loads query-selected training without mismatch')
+  console.log('PASS prerender hydration: editable subject prefill without mismatch or service selector')
 } finally {
   await server.close()
 }

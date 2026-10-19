@@ -1,0 +1,189 @@
+ENTROLIX — INTERNAL PAGE AUDIT AND IMPLEMENTATION
+20 October 2026
+
+SCOPE AND ARCHITECTURE
+Audited all 20 public routes and the existing not-found document. Updated the
+19 internal pages inside the existing React 19.2.8 / Vite 8.2.2 architecture.
+No new routes, dependencies, form provider, routing library or hosting service.
+No deployment performed. Existing homepage, navbar and footer are protected.
+
+The implementation follows the Sites skill's local-only workflow: work in the
+existing checkout, retain the framework, run local checks, and do not register,
+package or publish a separate Site.
+
+INITIAL FINDINGS
+- routes.js defines 4 fixed routes, 3 categories and 13 offerings. App.jsx selects
+  pages by pathname; native anchors preserve normal browser navigation.
+- ServicePages.jsx renders the directory, category pages and offering pages.
+  AboutPage.jsx and ContactPage.jsx serve distinct company/contact purposes.
+- catalog.js already contains page-specific audiences, topics, examples,
+  preparation notes and enquiry requirements. Retained all of that content.
+- The internal pages had no topic photographs. The existing photographs were
+  used on the completed homepage; no company-owned staff/office photos were
+  identified. The About page used a decorative orbit graphic.
+- Green/lime heroes, pastel cards and older About/Contact styles did not match
+  the approved navy homepage. Most service introductions used the same heading.
+- Contact supports category/service query prefill, native validation, a honeypot,
+  pending/success/error feedback, a mailto draft when no endpoint is configured,
+  and an optional public VITE_FORM_ENDPOINT. No submission logic was changed.
+- The current checkout contains .env.example, not a configured .env. Built
+  contact HTML offers Prepare email. Mailbox ownership/delivery is unverified.
+- Production is static prerendered HTML, served by the existing Vite preview or
+  Docker/Nginx setup. Existing CI runs route/motion/build checks. The README has
+  older descriptions of navbar labels, dimensions and green styling; the code,
+  not those historical paragraphs, was used as the source of truth.
+- No new dependency is justified. Existing React, React DOM, Lucide, Vite and
+  JSDOM are all used. No lint command/configuration is installed.
+
+ROUTE INVENTORY — NO ROUTES SKIPPED
+Route | Purpose | Work completed
+/ | Home | Protected; source and built main unchanged
+/services | Three-service directory | Editorial columns; team photo; navy hero
+/training | Training overview | Workshop photo; course-selection guidance
+/training/servicenow | Platform learning | Request/route/review example; workshop
+/training/ai | AI learning | Define/prototype/evaluate example; development photo
+/training/data-science | Analytical learning | Prepare/explore/explain; analytics
+/training/testing | QA learning | Plan/investigate/report; development photo
+/consulting | Technology overview | Planning photo; solution-selection guidance
+/consulting/servicenow-implementation | Platform implementation | Discover/configure/validate; planning
+/consulting/servicenow-support | Existing-platform support | Investigate/prioritize/review; development
+/consulting/lms | Custom learning platform | Enroll/learn/review; workshop
+/consulting/hrms | Custom HR platform | Onboard/support/understand; team
+/consulting/rms | Custom recruitment platform | Open/review/coordinate; interview
+/consulting/crm | Custom customer platform | Capture/follow up/review; analytics
+/recruitment | Staffing overview | Interview photo; staffing-model guidance
+/recruitment/permanent-staffing | Ongoing hiring | Define/review/coordinate; interview
+/recruitment/temporary-staffing | Time-bound hiring | Scope/match/coordinate; team
+/recruitment/it-staffing | Technical hiring | Clarify/screen/discuss; development
+/about | Company narrative | Editorial photography; beliefs/vision/mission retained
+/contact | Enquiry form | Form-led layout; clear instructions; supporting photo
+/404 (not a public service route) | Not-found fallback | Protected; unchanged
+
+DESIGN AND CONTENT CHANGES
+- New styles are rooted at .internal-page only. The new class is on internal
+  main elements, never on the homepage, header, footer or shared site shell.
+- Navy introductions, warm-white headings, light reading surfaces and restrained
+  blue/violet actions connect the internal pages with the homepage.
+- Training retains learning topics and preparation guidance; consulting retains
+  technical scope and integration considerations; recruitment uses a single-
+  column scope list and a three-column overview on larger screens.
+- All 13 offering pages have distinct overview headings and illustrative
+  three-stage explanations derived from their existing catalog text. These are
+  examples, not certification claims, guaranteed outcomes or fixed deliverables.
+- The three category pages now explain how to choose the relevant offering.
+- About keeps the existing company narrative and replaces only its decorative
+  orbit with workplace photography. Contact keeps its actual submission flow;
+  it adds required-field guidance and a warning not to submit confidential data.
+- Removed pointer tilt from the internal service cards; existing preference-
+  aware reveals, keyboard support and native FAQ disclosures remain.
+- Responsive rules at 1040, 800 and 600px recompose heroes, scopes, workflows,
+  forms and editorial columns. At narrow widths the form precedes supplemental
+  contact guidance. Inputs are 16px, image dimensions are reserved, hero images
+  load eagerly and the below-form contact image loads lazily.
+
+EXACT SOURCE / CONFIG / TEST FILES CHANGED THIS PASS
+Modified:
+  src/pages/ServicePages.jsx
+  src/components/ServiceCards.jsx
+  src/AboutPage.jsx
+  src/pages/ContactPage.jsx
+  src/main.jsx
+  scripts/verify-pages.mjs
+  package.json
+Added:
+  src/internal-content.js
+  src/components/PageMedia.jsx
+  src/pages/internal-pages.css
+  scripts/verify-internal.mjs
+  public/images/internal/credits.json
+  internal-page-audit.txt (this report)
+Generated dist/ was rebuilt, not manually edited.
+Existing unrelated worktree changes were not reverted or included in this list.
+
+IMAGES ADDED
+Seven photographs, each as two local WebP files (600x450 and 1200x900):
+  public/images/internal/workshop-600.webp
+  public/images/internal/workshop-1200.webp
+  public/images/internal/development-600.webp
+  public/images/internal/development-1200.webp
+  public/images/internal/interview-600.webp
+  public/images/internal/interview-1200.webp
+  public/images/internal/planning-600.webp
+  public/images/internal/planning-1200.webp
+  public/images/internal/analytics-600.webp
+  public/images/internal/analytics-1200.webp
+  public/images/internal/team-600.webp
+  public/images/internal/team-1200.webp
+  public/images/internal/conversation-600.webp
+  public/images/internal/conversation-1200.webp
+
+The 14 files total approximately 1,100 KiB, with no individual file over 185 KB.
+All seven downloaded 600px renditions were visually inspected. Source pages
+identified the photographs as free under the Unsplash license. Attribution,
+original URLs, download URLs, date and usage notes are in credits.json.
+License: https://unsplash.com/license
+These are illustrative stock photos, not Entrolix staff, clients or premises.
+Related pages reuse relevant photographs; each offering has its own distinct
+workflow illustration. Existing homepage assets were neither replaced nor edited.
+
+EXECUTED CHECKS
+PASS npm.cmd run build: 20 public pages plus 404 prerendered.
+PASS verify:pages: 20 routes; 13 complete offerings; 1,148 internal links;
+  category/service queries; unique titles; trailing-slash handling; FAQs;
+  header hover/click/keyboard/mobile state; mailto drafts; mocked form success,
+  failure and pending behavior; contact hydration and service prefill.
+PASS verify:motion: reveals, keyboard fail-open, pointer lifecycle, reduced
+  motion, stored preferences, StrictMode cleanup and unsupported-API fallback.
+PASS verify:build: 21 documents; local assets; all 20 routes over HTTP; nested
+  and trailing-slash URLs; enquiry parameters; real 404s and missing assets.
+PASS verify:expertise, verify:why, verify:process and verify:directory:
+  completed homepage sections and all 13 directory destinations preserved.
+PASS verify:internal: all 19 internal mains; 13 unique workflow explanations;
+  meaningful alt text; 14 valid WebP headers/dimensions and copied build assets;
+  responsive image candidates; loading behavior; enquiry destinations;
+  221 isolated CSS rules; responsive/focus/reduced-motion rules; selected text
+  and CTA contrast pairs at least 4.5:1.
+PASS git diff --check.
+PASS local dev URL /training/ai returned HTTP 200.
+
+BEFORE/AFTER PROTECTION CHECK
+Compared SHA-256 snapshots captured before implementation:
+- Header and footer HTML are identical across all 21 built documents.
+- Homepage and 404 main HTML are identical.
+- All homepage source/style files, SiteLayout.jsx (navbar/footer/shared form
+  banners), reference-header.css, base/shared styles, catalog.js, company.js,
+  routes.js, contact.js, motion files and deployment configuration are unchanged.
+- Exactly the 19 intended internal page mains changed.
+
+VERIFICATION LIMITS / OWNER FOLLOW-UP
+- Browser inventory was empty. No visual desktop/mobile viewport checks,
+  browser console/network checks, overflow measurements or screenshot
+  comparisons could be performed. Review 360, 390, 430, 768, 1024 and 1440px,
+  keyboard navigation, image crops, font loading and native form validation.
+  CSS/DOM assertions are not a substitute for those rendered-browser checks.
+- Form responses were mocked; no real enquiry was sent. Verify the mailbox and
+  configure a real public form endpoint if direct sending is wanted. The current
+  fallback prepares a draft and requires the visitor to send it themselves.
+- No public deployment, Docker run, production-origin checks or email delivery
+  checks were performed. Existing hosting configuration is preserved.
+- Fees, schedules, prerequisites, course delivery, certifications, support
+  coverage, commercial terms and vacancies need owner confirmation. No values,
+  placements, SLAs, awards, clients, testimonials or statistics were invented.
+- Existing company.js refers to an earlier supplied About PDF. That original
+  document is not present in this checkout; the narrative was preserved, not
+  independently certified. Confirm current company and service claims before
+  publication. About principles/vision are not additional purchasable services.
+- Verified address/phone, social accounts, legal policies and production domain
+  are not supplied. No invented contact details or placeholder links were added.
+- No suitable company-owned photography is available. Replace stock with
+  approved staff/workplace photography when supplied.
+- There is no installed linter. No lint success is claimed. The existing CI
+  workflow is unchanged; npm.cmd run check now also includes verify:internal.
+
+LOCAL REVIEW
+http://localhost:5173/services
+http://localhost:5173/training/ai
+http://localhost:5173/consulting/lms
+http://localhost:5173/recruitment
+http://localhost:5173/about
+http://localhost:5173/contact

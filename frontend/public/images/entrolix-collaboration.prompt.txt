@@ -1,0 +1,6 @@
+Generated with the built-in image-generation tool for the Entrolix homepage.
+This is an illustrative AI-generated scene, not a photograph of Entrolix staff.
+The generated PNG was encoded as JPEG at quality 88 for web delivery.
+
+Prompt:
+Use case: photorealistic-natural. Asset type: Entrolix website homepage hero image, right-hand image panel next to headline. Create an editorial photograph of three Indian technology professionals, two women and one man aged late twenties to thirties, collaborating around a laptop at a pale oak table in a contemporary training and technology studio. One woman explains something on the laptop while the others listen with relaxed, engaged expressions. Candid, professional, authentic rather than posed corporate stock. Medium-wide framing, subjects centered with comfortable space above heads, waist-up visible, laptop and notebook in foreground. Modern glass office with deep forest green architectural details, soft daylight from the left, a little greenery, charcoal and cream clothing with one muted olive layer. Refined natural textures, realistic hands and faces, warm neutral skin tones, subtle film grain. Landscape 3:2 composition that also crops well to a near-square image. No text, no logos, no watermark, no UI, no graphics, no badges. High-end professional photography, believable workspace, grounded and welcoming.
